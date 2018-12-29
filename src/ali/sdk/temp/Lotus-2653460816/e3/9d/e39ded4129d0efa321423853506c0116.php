@@ -1,0 +1,1 @@
+<?php exit;?>a:2:{i:0;s:52:"D:\www\pay\src\ali\sdk\lotusphp_runtime\shortcut.php";i:1;s:41:"D:\www\pay\src\ali\sdk\aop\AopEncrypt.php";}

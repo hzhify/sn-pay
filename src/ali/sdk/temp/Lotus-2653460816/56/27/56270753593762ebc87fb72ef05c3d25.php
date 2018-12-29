@@ -1,0 +1,1 @@
+<?php exit;?>s:78:"D:\www\pay\src\ali\sdk\lotusphp_runtime\Cache\Adapter\CacheAdapterMemcache.php";

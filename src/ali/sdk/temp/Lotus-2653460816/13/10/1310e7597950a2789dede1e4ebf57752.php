@@ -1,0 +1,1 @@
+<?php exit;?>s:97:"D:\www\pay\src\ali\sdk\lotusphp_runtime\DB\Adapter\ConnectionAdapter\DbConnectionAdapterPgsql.php";

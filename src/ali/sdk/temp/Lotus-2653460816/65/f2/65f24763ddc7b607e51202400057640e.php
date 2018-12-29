@@ -1,0 +1,1 @@
+<?php exit;?>s:51:"D:\www\pay\src\ali\sdk\lotusphp_runtime\XML\Xml.php";

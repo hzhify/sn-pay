@@ -1,0 +1,20 @@
+{
+  "name": "hzhify/sn-pay",
+  "description": "支付",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "hzhify",
+      "email": "hzhify@sina.com"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "src/Client.php"
+    ],
+    "psr-4": {
+      "pay\\": "src"
+    }
+  }
+}

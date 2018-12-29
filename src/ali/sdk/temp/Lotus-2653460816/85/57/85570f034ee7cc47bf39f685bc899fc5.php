@@ -1,0 +1,1 @@
+<?php exit;?>s:59:"D:\www\pay\src\ali\sdk\lotusphp_runtime\Captcha\Captcha.php";

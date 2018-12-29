@@ -1,0 +1,1 @@
+<?php exit;?>s:84:"D:\www\pay\src\ali\sdk\lotusphp_runtime\DB\Adapter\SqlAdapter\DbSqlAdapterSqlite.php";
