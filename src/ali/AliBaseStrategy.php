@@ -81,9 +81,7 @@ abstract class AliBaseStrategy implements BaseStrategy
         $aop->signType = $this->config['sign_type'];
         $result = $aop->$func($request);
         if (method_exists($this, 'aopClientRequestExecuteCallback')) {
-            $result = call_user_func([$this, 'aopClientRequestExecuteCallback'], $result);
-            var_dump($result);
-            exit;
+            return call_user_func([$this, 'aopClientRequestExecuteCallback'], $result);
         }
         return $result;
     }

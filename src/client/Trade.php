@@ -13,11 +13,11 @@ use vApp\lib\src\alipay\pay\App;
 use vApp\lib\src\alipay\pay\Wap;
 use vApp\lib\src\alipay\pay\Page;
 use vApp\lib\src\alipay\pay\Qr;
-use vApp\lib\src\alipay\trans\AliTrans;
-use vApp\lib\src\wx\pay\WxWapPay;
+use vApp\lib\src\alipay\trans\Trans;
+use vApp\lib\src\wx\pay\Wap;
 use vApp\lib\src\wx\pay\WxAppPay;
-use vApp\lib\src\wx\pay\WxQrPay;
-use vApp\lib\src\wx\pay\WxJsPay;
+use vApp\lib\src\wx\pay\Qr;
+use vApp\lib\src\wx\pay\Js;
 use vApp\lib\src\wx\trans\WxTrans;
 use vApp\lib\src\wx\trans\SendRedPack;
 use vApp\lib\src\baidu\pay\BaiduMiniAppPay;
@@ -66,19 +66,19 @@ class Trade {
                 $class = new Qr($data, $conf);
                 break;
             case 'alipay.trans.transfer':
-                $class = new AliTrans($data, $conf);
+                $class = new Trans($data, $conf);
                 break;
             case 'wechat.pay.wap':
-                $class = new WxWapPay($data, $conf);
+                $class = new Wap($data, $conf);
                 break;
             case 'wechat.pay.qr':
-                $class = new WxQrPay($data, $conf);
+                $class = new Qr($data, $conf);
                 break;
             case 'wechat.pay.app':
                 $class = new WxAppPay($data, $conf);
                 break;
             case 'wechat.pay.pub':
-                $class = new WxJsPay($data, $conf);
+                $class = new Js($data, $conf);
                 break;
             case 'wechat.trans.transfer':
                 $class = new WxTrans($data, $conf);

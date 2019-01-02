@@ -4,7 +4,6 @@ namespace pay\util;
 
 class Err
 {
-
     /**
      * @var object 对象实例
      */

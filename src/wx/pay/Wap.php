@@ -1,39 +1,28 @@
 <?php
 
 /**
- * @name WxWapPay
+ * @name Wap
  * @description 微信H5支付
  * @author houzhi
  * @time 2017/11/26 12:55
  */
 
-namespace vApp\lib\src\wx\pay;
+namespace pay\wx\pay;
 
-use v, vApp;
+use pay\util\Func;
 
-class WxWapPay extends WxPayBaseStrategy {
+class Wap extends WxPayBaseStrategy
+{
+    protected $extValidFields = ['bill_create_ip', 'ter_os'];
 
-    public function validData() {
-        parent::validData();
-        if (empty($this->data['bill_create_ip'])) {
-            v\Err::add('客户端IP不能为空', 'bill_create_ip');
-            return false;
-        }
-        $this->data['spbill_create_ip'] = $this->data['bill_create_ip'];
-        if (empty($this->data['ter_os'])) {
-            v\Err::add('操作系统不正确');
-            return false;
-        }
-//        $data['scene_info'] = '{"h5_info": {"type":"Android","app_name": "王者荣耀","package_name": "com.tencent.tmgp.sgame"}}';
-        return true;
-    }
-
-    protected function setTradeType() {
+    protected function setTradeType()
+    {
         $this->data['trade_type'] = 'MWEB';
     }
 
 
-    public function handle() {
+    public function handle()
+    {
         $result = parent::handle();
         if ($result) {
             $token = base64_encode($this->data['out_trade_no']);

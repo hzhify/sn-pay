@@ -15,7 +15,7 @@ class Page extends AliPayBaseStrategy
 
     /**
      * 获取交易请求实例
-     * @return \AlipayTradeAppPayRequest
+     * @return \AlipayTradePagePayRequest
      */
     public function getTradeRequestInstance()
     {

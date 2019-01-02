@@ -18,4 +18,9 @@ return [
     'rsa_private_key'   => '商户私钥',
     'rsa_public_key'    => '商户公钥',
     'alipay_public_key' => '支付宝公钥',
+    'payee_account'     => '收款者账号不能为空',
+    'openid'            => 'OPENID',
+    'product_id'        => '产品ID不能为空',
+    'bill_create_ip'    => '客户端IP不能为空',
+    'ter_os'            => '操作系统不正确',
 ];

@@ -32,7 +32,7 @@ abstract class AliPayBaseStrategy extends AliBaseStrategy
      */
     public function validAndRefactorData()
     {
-        if (Func::validParams($this->data, ['subject', 'total_fee', 'notify_url'])) {
+        if (Func::validParams($this->data, ['subject', 'total_fee', 'notify_url', 'out_trade_no'])) {
             // 接口调用传的单位是分，而支付宝要求，的是元
             $this->data['total_amount'] = $this->data['total_fee'] / 100;
             if (!(empty($this->data['timeout']) && empty($this->config['timeout']))) {

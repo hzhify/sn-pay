@@ -23,7 +23,7 @@ class Qr extends AliPayBaseStrategy
     {
         $request = new \AlipayTradePrecreateRequest();
         $request->setBizContent(json_encode($this->data));
-        $request->setNotifyUrl($this->config['notify_url']);
+        $request->setNotifyUrl($this->data['notify_url']);
         return $request;
     }
 

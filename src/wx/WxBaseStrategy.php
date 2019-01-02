@@ -7,17 +7,53 @@
  * @time 2017/11/26 12:55
  */
 
-namespace vApp\lib\src\wx;
+namespace pay\wx;
 
-use v;
-use vApp;
-use vApp\lib\src\common\BaseStrategy;
+use pay\BaseStrategy;
+use pay\util\Func;
+use pay\util\Err;
 
-abstract class WxBaseStrategy implements BaseStrategy {
-
+abstract class WxBaseStrategy implements BaseStrategy
+{
     protected $config = [];
 
-    abstract function handle();
+    protected $data = [];
+
+    protected $err;
+
+    public function __construct($data, $config)
+    {
+        $this->data = $data;
+        $this->config = $config;
+        $this->err = Err::getInstance();
+    }
+
+    public function handle()
+    {
+        if ($this->checkConf()) {
+            return $this->execute();
+        }
+        return false;
+    }
+
+    abstract function execute();
+
+    public function checkConf()
+    {
+        $fields = ['app_id', 'app_secret', 'md5_key', 'ssl_cert_path', 'ssl_key_path', 'mch_id', 'key'];
+        return Func::validParams($this->config, $fields);
+    }
+
+    /**
+     * 验签方法
+     * @param array $data 验证签名。
+     * @param string $signKey
+     * @return bool
+     */
+    public function checkSign($data, $signKey)
+    {
+        return isset($data['sign']) && Func::sign($data, $signKey, ['sign', 'sign_type']);
+    }
 
     /**
      * @param $xml
@@ -26,7 +62,8 @@ abstract class WxBaseStrategy implements BaseStrategy {
      * @param int $second
      * @return mixed
      */
-    public function postXmlCurl($xml, $url, $certs = [], $second = 30) {
+    public function postXmlCurl($xml, $url, $certs = [], $second = 30)
+    {
         $ch = curl_init();
         //设置超时
         curl_setopt($ch, CURLOPT_TIMEOUT, $second);
@@ -66,7 +103,7 @@ abstract class WxBaseStrategy implements BaseStrategy {
         } else {
             $error = curl_errno($ch);
             curl_close($ch);
-            v\Err::add("curl出错，错误码:$error");
+            $this->err->add("curl出错，错误码:$error");
             return false;
         }
     }
@@ -74,7 +111,8 @@ abstract class WxBaseStrategy implements BaseStrategy {
     /**
      * 获取毫秒级别的时间戳
      */
-    public static function getMilliSecond() {
+    public static function getMilliSecond()
+    {
         //获取毫秒的时间戳
         $time = explode(" ", microtime());
         $time = $time[1] . ($time[0] * 1000);
@@ -90,7 +128,8 @@ abstract class WxBaseStrategy implements BaseStrategy {
      * @param int $timeOut
      * @return array|bool|mixed
      */
-    public function clientRequestExecute($data, $timeOut = 6) {
+    public function clientRequestExecute($data, $timeOut = 6)
+    {
         $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         $data['appid'] = $this->config['app_id'];
         $data['mch_id'] = $this->config['mch_id'];
@@ -101,29 +140,28 @@ abstract class WxBaseStrategy implements BaseStrategy {
             $data['mch_id'] = $this->config['public_mch_id'];
         }
 
-        $data['nonce_str'] = vApp\lib\Extension::getNonceStr();
+        $data['nonce_str'] = Func::getNonceStr();
         $data['notify_url'] = $this->config['notify_url'];
         if (empty($data['spbill_create_ip'])) {
-            $data['spbill_create_ip'] = vApp\lib\Extension::getClientIp();
+            $data['spbill_create_ip'] = Func::getClientIp();
         }
-        v\App::log($data, 'test.log');
-        $data['sign'] = vApp\lib\Extension::sign($data, $signKey);
-        $xml = vApp\lib\Extension::toXml($data);
-        $response = $this->postXmlCurl($xml, $url, false, $timeOut);
-        if ($response) {
-            $result = vApp\lib\Extension::xmlToArray($response);
-            v\App::log($result, 'test.log');
-            $flag = !empty($result['return_code']) && $result['return_code'] === 'SUCCESS' && !empty($result['result_code']) && $result['result_code'] === 'SUCCESS';
-            if ($flag) {
-                if (!vApp\lib\Extension::checkSign($result, $signKey)) {
-                    v\Err::add('签名错误');
+        $data['sign'] = Func::sign($data, $signKey);
+        $xml = Func::toXml($data);
+        if ($response = $this->postXmlCurl($xml, $url, false, $timeOut)) {
+            $result = Func::xmlToArray($response);
+            if (!empty($result['return_code']) && $result['return_code'] === 'SUCCESS' && !empty($result['result_code']) && $result['result_code'] === 'SUCCESS') {
+                if (!Func::checkSign($result, $signKey)) {
+                    $this->err->add('签名错误');
                     return false;
+                }
+                if (method_exists($this, 'aopClientRequestExecuteCallback')) {
+                    return call_user_func([$this, 'aopClientRequestExecuteCallback'], $result);
                 }
                 return $result;
             } else {
                 $errCode = empty($result['err_code']) ? $result['return_code'] : $result['err_code'];
                 $errMsg = empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des'];
-                v\Err::add(['msg' => $errMsg, 'code' => $errCode]);
+                $this->err->add($errMsg, '*', $errCode);
                 return false;
             }
         }
