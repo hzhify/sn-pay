@@ -249,4 +249,21 @@ class Func
     }
 
 
+    /**
+     * 数组KEY重命名
+     * @param array $array
+     * @param array $keys
+     * @return array
+     */
+    public static function arrayReKey(&$array, $keys)
+    {
+        foreach ($keys as $key => $keyNew) {
+            if (isset($array[$key])) {
+                $array[$keyNew] = $array[$key];
+                unset($array[$key]);
+            }
+        }
+        return $array;
+    }
+
 }

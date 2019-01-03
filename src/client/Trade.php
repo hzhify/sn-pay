@@ -18,8 +18,8 @@ use vApp\lib\src\wx\pay\Wap;
 use vApp\lib\src\wx\pay\WxAppPay;
 use vApp\lib\src\wx\pay\Qr;
 use vApp\lib\src\wx\pay\Js;
-use vApp\lib\src\wx\trans\WxTrans;
-use vApp\lib\src\wx\trans\SendRedPack;
+use vApp\lib\src\wx\trans\Trans;
+use vApp\lib\src\wx\trans\RedPack;
 use vApp\lib\src\baidu\pay\BaiduMiniAppPay;
 
 
@@ -81,10 +81,10 @@ class Trade {
                 $class = new Js($data, $conf);
                 break;
             case 'wechat.trans.transfer':
-                $class = new WxTrans($data, $conf);
+                $class = new Trans($data, $conf);
                 break;
             case 'wechat.trans.red_pack':
-                $class = new SendRedPack($data, $conf);
+                $class = new RedPack($data, $conf);
                 break;
         }
         return $class->handle();
