@@ -11,7 +11,6 @@ namespace vApp\lib\src\wx\trans;
 
 use pay\wx\WxBaseStrategy;
 use pay\util\Func;
-use pay\util\Err;
 
 class Trans extends WxBaseStrategy
 {
@@ -30,14 +29,13 @@ class Trans extends WxBaseStrategy
         if (!Func::validParams($this->data, $fields)) {
             return false;
         }
-        $err = Err::getInstance();
         if (isset($this->data['check_name']) && !in_array($this->data['check_name'], [0, 1])) {
-            $err->add('是否校验真实姓名选项不正确');
+            $this->err->add('是否校验真实姓名选项不正确');
             return false;
         }
         if (isset($this->data['check_name']) && $this->data['check_name'] == 1) {
             if (empty($this->data['real_name'])) {
-                $err->add('真实姓名不能为空');
+                $this->err->add('真实姓名不能为空');
                 return false;
             }
             $this->data['check_name'] = 'FORCE_CHECK';
@@ -47,7 +45,7 @@ class Trans extends WxBaseStrategy
         }
 
         if ($this->data['total_fee'] < 100) {
-            $err->add('转账金额至少1元');
+            $this->err->add('转账金额至少1元');
             return false;
         }
         $renameFields = [
@@ -91,7 +89,7 @@ class Trans extends WxBaseStrategy
             } else {
                 $errCode = empty($result['err_code']) ? $result['return_code'] : $result['err_code'];
                 $errMsg = empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des'];
-                Err::getInstance()->add(['msg' => $errMsg, 'code' => $errCode]);
+                $this->err->add(['msg' => $errMsg, 'code' => $errCode]);
             }
         }
         return false;

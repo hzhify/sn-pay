@@ -20,7 +20,7 @@ use vApp\lib\src\wx\pay\Qr;
 use vApp\lib\src\wx\pay\Js;
 use vApp\lib\src\wx\trans\Trans;
 use vApp\lib\src\wx\trans\RedPack;
-use vApp\lib\src\baidu\pay\BaiduMiniAppPay;
+use vApp\lib\src\baidu\pay\MiniApp;
 
 
 class Trade {
@@ -51,7 +51,7 @@ class Trade {
     public static function run($data, $conf) {
         switch ($data['trade_type']) {
             case 'baidu.pay.mini_app':
-                $class = new BaiduMiniAppPay($data, $conf);
+                $class = new MiniApp($data, $conf);
                 break;
             case 'alipay.pay.app':
                 $class = new App($data, $conf);

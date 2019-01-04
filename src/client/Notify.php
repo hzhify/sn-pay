@@ -10,8 +10,8 @@
 namespace vApp\lib\src\client;
 
 use vApp\lib\src\alipay\notify\Notify;
-use vApp\lib\src\wx\notify\WxNotify;
-use vApp\lib\src\baidu\notify\BaiduNotify;
+use vApp\lib\src\wx\notify\Notify;
+use vApp\lib\src\baidu\notify\Notify;
 
 
 class Notify {
@@ -45,10 +45,10 @@ class Notify {
                 $class = new Notify($conf);
                 break;
             case 'wechat':
-                $class = new WxNotify($conf);
+                $class = new Notify($conf);
                 break;
             case 'baidu':
-                $class = new BaiduNotify($conf);
+                $class = new Notify($conf);
                 break;
         }
         return $class->handle();
