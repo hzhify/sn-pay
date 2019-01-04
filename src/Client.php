@@ -39,31 +39,11 @@ class Client
             return strtoupper($matches[2]);
         }, $class);
         $class = ucfirst($class);
-        $payWay = self::getPayWay($tradeType[0]);
-        $obj = "pay\\{$payWay}\\{$tradeType[1]}\\{$class}";
+        $obj = "pay\\{$tradeType[0]}\\{$tradeType[1]}\\{$class}";
         $class = new $obj($data, $conf);
         if ($payInfo = $class->handle()) {
             return Func::resData(['pay_info' => $payInfo]);
         }
         return Func::resErr();
-    }
-
-    private static function getPayWay($payWay)
-    {
-        switch ($payWay) {
-            case 'alipay':
-                $res = 'ali';
-                break;
-            case 'wechat':
-                $res = 'wx';
-                break;
-            case 'baidu':
-                $res = 'bd';
-                break;
-            default:
-                $res = $payWay;
-                break;
-        }
-        return $res;
     }
 }
