@@ -19,4 +19,9 @@ class Wap extends WxPayBaseStrategy
     {
         $this->data['trade_type'] = 'MWEB';
     }
+
+    public function aopClientRequestExecuteCallback($result)
+    {
+        return $result['mweb_url'];
+    }
 }

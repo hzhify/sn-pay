@@ -21,10 +21,8 @@ abstract class WxPayBaseStrategy extends WxBaseStrategy
     {
         if ($this->validAndRefactorData()) {
             $this->setTradeType();
-            $this->data = Func::arrayFilterKey($this->data, 'body,out_trade_no,time_expire,time_start,total_fee,spbill_create_ip,trade_type,scene_info,openid');
-            $data = $this->clientRequestExecute($this->data); //发起支付请求
-            var_dump($data);
-            exit;
+            $reqData = Func::arrayFilterKey($this->data, 'body,out_trade_no,time_expire,time_start,total_fee,spbill_create_ip,trade_type,scene_info,openid,notify_url');
+            return $this->clientRequestExecute($reqData); //发起支付请求
         }
         return false;
     }

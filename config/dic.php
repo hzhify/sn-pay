@@ -23,4 +23,5 @@ return [
     'product_id'        => '产品ID不能为空',
     'bill_create_ip'    => '客户端IP不能为空',
     'ter_os'            => '操作系统不正确',
+    'real_name '        => '真实姓名',
 ];

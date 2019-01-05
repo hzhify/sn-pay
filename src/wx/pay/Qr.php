@@ -24,7 +24,7 @@ class Qr extends WxPayBaseStrategy
     {
         $qrCodeDir = $this->data['qr_code_dir'] ?? '';
         $return = [
-            'code_img_url' => Func::getQrCode($result['code_url'], 'wechat_' . $this->data['out_trade_no'], $qrCodeDir),
+            'code_img_url' => Func::getQrCode($result['code_url'], 'wx_' . $this->data['out_trade_no'], $qrCodeDir),
             'code_url'     => $result['code_url']
         ];
         return $return;

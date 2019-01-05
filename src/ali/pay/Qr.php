@@ -10,6 +10,7 @@
 namespace pay\ali\pay;
 
 use pay\util\Err;
+use pay\util\Func;
 
 class Qr extends AliPayBaseStrategy
 {
@@ -32,9 +33,14 @@ class Qr extends AliPayBaseStrategy
         if (!empty($result) && !empty($result->alipay_trade_precreate_response)) {
             $result = json_decode(json_encode($result->alipay_trade_precreate_response), true);
             if (!empty($result) && $result['code'] === '10000') {
-                return ['code_url' => $result['qr_code']];
+                $qrCodeDir = $this->data['qr_code_dir'] ?? '';
+                return [
+                    'code_img_url' => Func::getQrCode($result['qr_code'], 'ali_' . $this->data['out_trade_no'], $qrCodeDir),
+                    'code_url'     => $result['qr_code']
+                ];
             } else {
-                Err::getInstance()->add($result['msg'], $result['code']);
+                $msg = $result['sub_msg'] ?? $result['msg'];
+                Err::getInstance()->add($msg, $result['code']);
             }
         }
         return false;

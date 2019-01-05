@@ -29,9 +29,12 @@ class Client
 {
     public static function run($tradeType, $conf, $data = [])
     {
+        Func::log($tradeType, 'test.log');
+        Func::log($conf, 'test.log');
+        Func::log($data, 'test.log');
         $tradeTypes = require dirname(__DIR__) . '/config/trade_type.php';
         if (!in_array($tradeType, $tradeTypes)) {
-            return Func::resErr('交易类型不正确', 'trade_type');
+            return Func::resErr('交易类型不正确', '400', 'trade_type');
         }
         $tradeType = explode('.', $tradeType);
         $class = $tradeType[2];

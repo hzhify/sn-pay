@@ -40,7 +40,7 @@ abstract class WxBaseStrategy implements BaseStrategy
 
     public function checkConf()
     {
-        $fields = ['app_id', 'app_secret', 'md5_key', 'ssl_cert_path', 'ssl_key_path', 'mch_id', 'key'];
+        $fields = ['app_id', 'app_secret', 'mch_id', 'md5_key', 'ssl_cert_path', 'ssl_key_path'];
         return Func::validParams($this->config, $fields);
     }
 
@@ -141,7 +141,6 @@ abstract class WxBaseStrategy implements BaseStrategy
         }
 
         $data['nonce_str'] = Func::getNonceStr();
-        $data['notify_url'] = $this->config['notify_url'];
         if (empty($data['spbill_create_ip'])) {
             $data['spbill_create_ip'] = Func::getClientIp();
         }

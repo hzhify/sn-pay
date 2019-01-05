@@ -19,7 +19,7 @@ abstract class AliPayBaseStrategy extends AliBaseStrategy
     public function execute()
     {
         if ($this->validAndRefactorData()) {
-            $this->data = Func::arrayFilterKey($this->data, 'body,subject,out_trade_no,time_expire,total_amount,passback_params');
+            $this->data = Func::arrayFilterKey($this->data, 'body,subject,out_trade_no,time_expire,total_amount,passback_params,notify_url,return_url,qr_code_dir');
             $request = $this->getTradeRequestInstance(); //获取交易请求实例
             return $this->aopClientRequestExecute($request, $this->execFunc); //发起支付请求
         }

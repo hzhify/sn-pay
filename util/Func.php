@@ -18,7 +18,7 @@ class Func
         $dic = require PAY_ROOT . '/config/dic.php';
         foreach ($fields as $k) {
             if (!isset($data[$k]) || ($data[$k] != 0 && empty($data[$k]))) {
-                $err->add($dic[$k] . '不能为空', $k);
+                $err->add(($dic[$k] ?? $k) . '不能为空', $k);
                 return false;
             }
         }
@@ -226,7 +226,6 @@ class Func
         return $ip;
     }
 
-
     /**
      * 生成二维码
      * @param mixed $data 生成二维码的数据
@@ -236,6 +235,7 @@ class Func
      */
     public static function getQrCode($data, $filename, $dir = '')
     {
+        require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phpqrcode.php';
         $level = 'QR_ECLEVEL_L'; // L-smallest, M, Q, H-best
         $size = 3; // 1-50
         $margin = 4;
@@ -264,6 +264,15 @@ class Func
             }
         }
         return $array;
+    }
+
+    public static function log($data, $file = 'default.log')
+    {
+        // 日志不进行/与中文的编码，日志之间空一行处理
+        $data = date('Y-m-d H:i:s') . "\t" . (is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data) . "\r\n\r\n";
+        $logDir = PAY_ROOT . DIRECTORY_SEPARATOR . 'logs/';
+        $filename = "$logDir/$file";
+        @file_put_autodir($filename, $data, FILE_APPEND | LOCK_EX);
     }
 
 }
