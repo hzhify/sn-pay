@@ -23,8 +23,10 @@ class Notify extends WxBaseStrategy
         } else {
             $this->data = Func::xmlToArray($params);
         }
+        Func::log('ali-notify-execute-start-data-' . json_encode($this->data), $this->logFile);
         $flag = !empty($this->data['return_code']) && $this->data['return_code'] == 'SUCCESS' && !empty($this->data['result_code']) && $this->data['result_code'] == 'SUCCESS';
         if (!$flag) {
+            Func::log('ali-notify-execute-status-error', $this->logFile);
             $this->err->add('状态不正确');
             return false;
         }
@@ -38,11 +40,13 @@ class Notify extends WxBaseStrategy
             $appId = $this->config['app_id'];
         }
         if (empty($this->data['sign']) || !(Func::checkSign($this->data, $signKey))) {
+            Func::log('ali-notify-execute-sign-error', $this->logFile);
             $this->err->add('签名不正确');
             return false;
         }
 
-        if ($appId !== $this->data['app_id']) { //校验appid是否为该商户本身
+        if ($appId !== $this->data['appid']) { //校验appid是否为该商户本身
+            Func::log('ali-notify-execute-appid-error', $this->logFile);
             $this->err->add('数据不正确');
             return false;
         }

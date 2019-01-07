@@ -3,6 +3,7 @@
   "description": "支付",
   "type": "library",
   "license": "MIT",
+  "minimum-stability": "stable",
   "authors": [
     {
       "name": "hzhify",
