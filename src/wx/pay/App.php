@@ -17,4 +17,9 @@ class App extends WxPayBaseStrategy
         $this->data['trade_type'] = 'APP';
     }
 
+    public function aopClientRequestExecuteCallback($result)
+    {
+        return $result['prepay_id'];
+    }
+
 }
