@@ -9,17 +9,13 @@
 
 namespace pay\wx\pay;
 
-class App extends WxPayBaseStrategy
-{
+class App extends WxPayBaseStrategy {
 
-    protected function setTradeType()
-    {
+    protected function setTradeType() {
         $this->data['trade_type'] = 'APP';
     }
 
-    public function aopClientRequestExecuteCallback($result)
-    {
+    public function aopClientRequestExecuteCallback($result) {
         return $result['prepay_id'];
     }
-
 }

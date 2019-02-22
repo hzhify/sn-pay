@@ -13,15 +13,19 @@ use pay\util\Func;
 use pay\util\Err;
 use pay\wx\WxBaseStrategy;
 
-abstract class WxPayBaseStrategy extends WxBaseStrategy
-{
+abstract class WxPayBaseStrategy extends WxBaseStrategy {
     protected $extValidFields = [];
 
-    public function execute()
-    {
+    public function execute() {
         if ($this->validAndRefactorData()) {
             $this->setTradeType();
             $reqData = Func::arrayFilterKey($this->data, 'body,out_trade_no,time_expire,time_start,total_fee,spbill_create_ip,trade_type,scene_info,openid,notify_url');
+            $reqData['appid'] = $this->config['app_id'];
+            $reqData['mch_id'] = $this->config['mch_id'];
+            if ($this->isPubPay) {
+                $reqData['appid'] = $this->config['public_app_id'];
+                $reqData['mch_id'] = $this->config['public_mch_id'];
+            }
             return $this->clientRequestExecute($reqData); //发起支付请求
         }
         return false;
@@ -37,8 +41,7 @@ abstract class WxPayBaseStrategy extends WxBaseStrategy
      * 校验数据
      * @return mixed
      */
-    public function validAndRefactorData()
-    {
+    public function validAndRefactorData() {
         $fields = ['subject', 'total_fee', 'notify_url', 'out_trade_no'];
         !empty($this->extValidFields) && $fields = array_merge($fields, $this->extValidFields);
         if (Func::validParams($this->data, $fields)) {

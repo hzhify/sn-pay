@@ -12,18 +12,23 @@ return [
     'ali.pay.app', //支付宝APP支付
     'ali.pay.qr', //支付宝扫码支付
     'ali.trans.trans', //支付宝单笔转账到个人账户
-    'ali.query.trans', //支付宝单笔转账到个人账户（订单查询）
+    'ali.trans.query', //支付宝单笔转账到个人账户（订单查询）
     'ali.notify.notify', // 支付宝回调
+    'ali.refund.refund', // 支付宝退款
+    'ali.refund.query', // 支付宝查询退款
 
 //    ------
-    'wx.pay.pub', //微信公众号支付
-    'wx.pay.qr', //微信原生扫码
-    'wx.pay.wap', //微信手机网页
-    'wx.pay.app', //微信app
-    'wx.pay.mini', //微信小程序
-    'wx.trans.trans', //微信转账（企业付款到零钱）
-    'wx.trans.red_pack', //微信红包
-    'wx.notify.notify', // 支付宝回调
+    'wx.pay.pub', // 微信公众号支付
+    'wx.pay.qr', // 微信原生扫码
+    'wx.pay.wap', // 微信手机网页
+    'wx.pay.app', // 微信app
+    'wx.pay.mini', // 微信小程序
+    'wx.trans.trans', // 微信转账（企业付款到零钱）
+    'wx.trans.red_pack', // 微信红包
+    'wx.notify.notify', // 微信支付回调
+    'wx.refund.refund', // 微信退款
+    'wx.refund.query', // 微信退款查询
+    'wx.notify.refund', // 微信退款回调
 
     //----
     'bd.pay.mini_app', // 百度小程序支付

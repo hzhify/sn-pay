@@ -11,17 +11,14 @@ namespace pay\wx\pay;
 
 use pay\util\Func;
 
-class Qr extends WxPayBaseStrategy
-{
+class Qr extends WxPayBaseStrategy {
     protected $extValidFields = ['product_id'];
 
-    protected function setTradeType()
-    {
+    protected function setTradeType() {
         $this->data['trade_type'] = 'NATIVE';
     }
 
-    public function aopClientRequestExecuteCallback($result)
-    {
+    public function aopClientRequestExecuteCallback($result) {
         $qrCodeDir = $this->data['qr_code_dir'] ?? '';
         $return = [
             'code_img_url' => Func::getQrCode($result['code_url'], 'wx_' . $this->data['out_trade_no'], $qrCodeDir),

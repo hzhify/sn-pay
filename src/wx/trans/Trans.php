@@ -7,24 +7,31 @@
  * @time 2017/11/27 23:21
  */
 
-namespace vApp\lib\src\wx\trans;
+namespace pay\wx\trans;
 
 use pay\wx\WxBaseStrategy;
 use pay\util\Func;
 
-class Trans extends WxBaseStrategy
-{
-    public function execute()
-    {
+class Trans extends WxBaseStrategy {
+
+    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
+
+    public function execute() {
         if ($this->validAndRefactorData()) {
             $this->data = Func::arrayFilterKey($this->data, 'partner_trade_no,openid,check_name,re_user_name,amount,desc');
-            return $this->clientRequestExecute($this->data);
+            $this->data['mch_appid'] = $this->config['app_id'];
+            $this->data['mchid'] = $this->config['mch_id'];
+            $this->data['spbill_create_ip'] = Func::getClientIp();
+            $certs = [
+                'cert' => $this->config['ssl_cert_path'],
+                'key'  => $this->config['ssl_key_path'],
+            ];
+            return $this->clientRequestExecute($this->data, $certs);
         }
         return false;
     }
 
-    private function validAndRefactorData()
-    {
+    private function validAndRefactorData() {
         $fields = 'open_id,out_trade_no,total_fee,subject';
         if (!Func::validParams($this->data, $fields)) {
             return false;
@@ -58,40 +65,4 @@ class Trans extends WxBaseStrategy
         return true;
     }
 
-    /**
-     * 执行请求
-     * @param $data
-     * @param int $timeOut
-     * @return array|bool|mixed
-     */
-    public function clientRequestExecute($data, $timeOut = 6)
-    {
-        $url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
-        $data['mch_appid'] = $this->config['app_id'];
-        $data['mchid'] = $this->config['mch_id'];
-        $data['nonce_str'] = Func::getNonceStr();
-        $data['spbill_create_ip'] = Func::getClientIp();
-        $data['sign'] = Func::sign($data, $this->config['md5_key']);
-        $xml = Func::toXml($data);
-        $certs = [
-            'cert' => $this->config['ssl_cert_path'],
-            'key'  => $this->config['ssl_key_path'],
-        ];
-        $response = $this->postXmlCurl($xml, $url, $certs, $timeOut);
-        if ($response) {
-            $result = Func::xmlToArray($response);
-            if (!empty($result['return_code']) && $result['return_code'] === 'SUCCESS' && !empty($result['result_code']) && $result['result_code'] === 'SUCCESS') {
-                return [
-                    'out_trade_no' => $result['partner_trade_no'],
-                    'pay_time'     => strtotime($result['payment_time']),
-                    'trade_no'     => $result['payment_no'],
-                ];
-            } else {
-                $errCode = empty($result['err_code']) ? $result['return_code'] : $result['err_code'];
-                $errMsg = empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des'];
-                $this->err->add(['msg' => $errMsg, 'code' => $errCode]);
-            }
-        }
-        return false;
-    }
 }

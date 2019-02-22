@@ -13,10 +13,8 @@ use pay\ali\AliBaseStrategy;
 use pay\util\Func;
 use pay\util\Err;
 
-class Notify extends AliBaseStrategy
-{
-    public function execute()
-    {
+class Notify extends AliBaseStrategy {
+    public function execute() {
         $err = Err::getInstance();
         if (!(isset($this->data['trade_status']) && ($this->data['trade_status'] === 'TRADE_SUCCESS' || $this->data['trade_status'] === 'TRADE_FINISHED'))) {
             $err->add('支付状态不正确');
@@ -28,7 +26,7 @@ class Notify extends AliBaseStrategy
             $data = Func::arrayFilterKey($this->data, $fields);
             $data = array_merge($data, [
                 'pay_time'      => strtotime($this->data['gmt_payment']),
-                'payer_account' => $this->data['buyer_logon_id'],
+                'payer_account' => $this->data['buyer_logon_id'] ?? '',
                 'payer_id'      => $this->data['buyer_id'],
                 'total_fee'     => $this->data['total_amount'] * 100,
             ]);

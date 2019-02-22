@@ -11,17 +11,14 @@ namespace pay\wx\pay;
 
 use pay\util\Func;
 
-class Wap extends WxPayBaseStrategy
-{
+class Wap extends WxPayBaseStrategy {
     protected $extValidFields = ['bill_create_ip', 'ter_os'];
 
-    protected function setTradeType()
-    {
+    protected function setTradeType() {
         $this->data['trade_type'] = 'MWEB';
     }
 
-    public function aopClientRequestExecuteCallback($result)
-    {
+    public function aopClientRequestExecuteCallback($result) {
         return $result['mweb_url'];
     }
 }

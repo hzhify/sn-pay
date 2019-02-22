@@ -14,23 +14,20 @@ use pay\util\Func;
 
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AopSdk.php';
 
-abstract class AliBaseStrategy implements BaseStrategy
-{
+abstract class AliBaseStrategy implements BaseStrategy {
     protected $config = [];
 
     protected $data = [];
 
     protected $logFile;
 
-    public function __construct($data, $config)
-    {
+    public function __construct($data, $config) {
         $this->data = $data;
         $this->config = $config;
         $this->logFile = 'pay-' . date('Ymd') . '.log';
     }
 
-    public function handle()
-    {
+    public function handle() {
         if ($this->checkConf()) {
             return $this->execute();
         }
@@ -39,8 +36,7 @@ abstract class AliBaseStrategy implements BaseStrategy
 
     abstract function execute();
 
-    public function checkConf()
-    {
+    public function checkConf() {
         $fields = ['gateway_url', 'app_id', 'partner', 'seller_email', 'rsa_private_key', 'rsa_public_key', 'alipay_public_key', 'gateway_url', 'md5_key'];
         if (Func::validParams($this->config, $fields)) {
             !isset($this->config['charset']) && $this->config['charset'] = 'UTF-8';
@@ -56,8 +52,7 @@ abstract class AliBaseStrategy implements BaseStrategy
      * @param array $data 验签支付宝返回的信息，使用支付宝公钥。
      * @return bool
      */
-    public function checkSign($data)
-    {
+    public function checkSign($data) {
         $aop = new \AopClient();
         $aop->alipayPublicKey = $this->config['alipay_public_key'];
         $result = $aop->rsaCheckV1($data, $this->config['alipay_public_key'], $this->config['sign_type']);
@@ -71,8 +66,7 @@ abstract class AliBaseStrategy implements BaseStrategy
      * @param string $func 方法
      * @return \AopClient
      */
-    public function aopClientRequestExecute($request, $func)
-    {
+    public function aopClientRequestExecute($request, $func) {
         $aop = new \AopClient();
         $aop->gatewayUrl = $this->config['gateway_url'];
         $aop->appId = $this->config['app_id'];
