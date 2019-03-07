@@ -38,6 +38,9 @@ class Client
         }
         $tradeType = explode('.', $tradeType);
         $class = $tradeType[2];
+        $class = preg_replace_callback('/([-_]+([a-z]{1}))/i', function ($matches) {
+            return strtoupper($matches[2]);
+        }, $class);
         $class = ucfirst($class);
         $obj = "pay\\{$tradeType[0]}\\{$tradeType[1]}\\{$class}";
         $class = new $obj($data, $conf);

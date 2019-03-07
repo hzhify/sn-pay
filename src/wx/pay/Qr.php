@@ -21,8 +21,8 @@ class Qr extends WxPayBaseStrategy {
     public function aopClientRequestExecuteCallback($result) {
         $qrCodeDir = $this->data['qr_code_dir'] ?? '';
         $return = [
-            'code_img_url' => Func::getQrCode($result['code_url'], 'wx_' . $this->data['out_trade_no'], $qrCodeDir),
-            'code_url'     => $result['code_url']
+            'code_img' => Func::getQrCode($result['code_url'], 'wx_' . $this->data['out_trade_no'], $qrCodeDir),
+            'code_url' => $result['code_url']
         ];
         return $return;
     }

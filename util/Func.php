@@ -9,10 +9,8 @@
 
 namespace pay\util;
 
-class Func
-{
-    public static function validParams($data, $fields)
-    {
+class Func {
+    public static function validParams($data, $fields) {
         $fields = self::arrayVal($fields);
         $err = Err::getInstance();
         $dic = require PAY_ROOT . '/config/dic.php';
@@ -31,8 +29,7 @@ class Func
      * @param array | string $keys
      * @return array
      */
-    public static function arrayFilterKey($array, $keys)
-    {
+    public static function arrayFilterKey($array, $keys) {
         $keys = array_flip(self::arrayVal($keys));
         return array_intersect_key($array, $keys);
     }
@@ -43,8 +40,7 @@ class Func
      * @param string $spliter 分割字符，逗号必定会被分割，默认分号也会被分割
      * @return array
      */
-    public static function arrayVal($var, $spliter = ';')
-    {
+    public static function arrayVal($var, $spliter = ';') {
         if (empty($var))
             return [];
         switch (gettype($var)) {
@@ -66,8 +62,7 @@ class Func
      * @param $array
      * @return array
      */
-    public static function objectToArray($array)
-    {
+    public static function objectToArray($array) {
         if (is_object($array)) {
             $array = (array)$array;
         }
@@ -79,13 +74,11 @@ class Func
         return $array;
     }
 
-    public static function resData($data)
-    {
+    public static function resData($data) {
         return ['code' => 200, 'msg' => '', 'data' => $data];
     }
 
-    public static function resErr($msg = '', $code = 400, $field = '*')
-    {
+    public static function resErr($msg = '', $code = 400, $field = '*') {
         $msgInfo = self::getErrInfo();
         $msg = $msgInfo['msg'] ? $msgInfo['msg'] : $msg;
         $code = $msgInfo['code'] === 400 ? $code : $msgInfo['code'];
@@ -100,8 +93,7 @@ class Func
      * 获取错误信息
      * @return array
      */
-    public static function getErrInfo()
-    {
+    public static function getErrInfo() {
         $err = Err::getInstance()->get();
         $field = key($err['message']);
         if ($field) {
@@ -124,8 +116,7 @@ class Func
      * @return string
      *
      */
-    public static function sign($data, $key, $filterFields = null, $filterNull = true)
-    {
+    public static function sign($data, $key, $filterFields = null, $filterNull = true) {
         $str = self::toUrlParams($data, $filterFields, $filterNull);
         return strtoupper(md5($str . '&key=' . $key));
     }
@@ -137,8 +128,7 @@ class Func
      * @param bool $filterNull 是否过滤空字段
      * @return string
      */
-    public static function toUrlParams($arr, $filterFields = null, $filterNull = true)
-    {
+    public static function toUrlParams($arr, $filterFields = null, $filterNull = true) {
         $buff = "";
         if (is_array($arr)) {
             ksort($arr);
@@ -161,8 +151,7 @@ class Func
      * @param array $data
      * @return string
      */
-    public static function toXml($data)
-    {
+    public static function toXml($data) {
         $str = '<xml>';
         foreach ($data as $key => $val) {
             if (is_numeric($val)) {
@@ -180,8 +169,7 @@ class Func
      * @param int $length
      * @return string 产生的随机字符串
      */
-    public static function getNonceStr($length = 32)
-    {
+    public static function getNonceStr($length = 32) {
         $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
         $str = "";
         for ($i = 0; $i < $length; $i++) {
@@ -195,8 +183,7 @@ class Func
      * @param string $xml
      * @return array
      */
-    public static function xmlToArray($xml)
-    {
+    public static function xmlToArray($xml) {
         //将XML转为array
         //禁止引用外部xml实体
         libxml_disable_entity_loader(true);
@@ -209,14 +196,12 @@ class Func
      * @param string $key
      * @return bool
      */
-    public static function checkSign($data, $key)
-    {
+    public static function checkSign($data, $key) {
         return $data['sign'] === self::sign($data, $key, ['sign', 'sign_type']);
     }
 
 
-    public static function getClientIp()
-    {
+    public static function getClientIp() {
         $ip = '127.0.0.1';
         if ($_SERVER['REMOTE_ADDR']) {
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -233,14 +218,15 @@ class Func
      * @param string $dir 路径
      * @return string
      */
-    public static function getQrCode($data, $filename, $dir = '')
-    {
+    public static function getQrCode($data, $filename, $dir = '') {
         require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phpqrcode.php';
         $level = 'QR_ECLEVEL_L'; // L-smallest, M, Q, H-best
         $size = 3; // 1-50
         $margin = 4;
         $dir === '' && $dir = PAY_ROOT . DIRECTORY_SEPARATOR . 'qrcode' . DIRECTORY_SEPARATOR . date("Y-m-d") . DIRECTORY_SEPARATOR;
+        Func::log($dir, 'error.log');
         if (!is_dir($dir)) {
+            Func::log($dir, 'error.log');
             mkdir($dir, 0777); // 使用最大权限0777创建文件
         }
         $file = $dir . $filename . '.png';
@@ -255,8 +241,7 @@ class Func
      * @param array $keys
      * @return array
      */
-    public static function arrayReKey(&$array, $keys)
-    {
+    public static function arrayReKey(&$array, $keys) {
         foreach ($keys as $key => $keyNew) {
             if (isset($array[$key])) {
                 $array[$keyNew] = $array[$key];
@@ -266,8 +251,7 @@ class Func
         return $array;
     }
 
-    public static function log($data, $file = 'default.log')
-    {
+    public static function log($data, $file = 'default.log') {
         // 日志不进行/与中文的编码，日志之间空一行处理
         $data = date('Y-m-d H:i:s') . "\t" . (is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data) . "\r\n\r\n";
         $logDir = PAY_ROOT . DIRECTORY_SEPARATOR . 'logs/';

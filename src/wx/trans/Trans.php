@@ -16,6 +16,15 @@ class Trans extends WxBaseStrategy {
 
     protected $gatewayUrl = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
 
+    public function aopClientRequestExecuteCallback($result) {
+        return [
+            'nonce_str'    => $result['nonce_str'],
+            'out_trade_no' => $result['partner_trade_no'],
+            'trade_no'     => $result['payment_no'],
+            'pay_time'     => strtotime($result['payment_time']),
+        ];
+    }
+
     public function execute() {
         if ($this->validAndRefactorData()) {
             $this->data = Func::arrayFilterKey($this->data, 'partner_trade_no,openid,check_name,re_user_name,amount,desc');
