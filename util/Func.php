@@ -219,7 +219,7 @@ class Func {
      * @return string
      */
     public static function getQrCode($data, $filename, $dir = '') {
-        require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phpqrcode.php';
+        require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phpqrcode.php';
         $level = 'QR_ECLEVEL_L'; // L-smallest, M, Q, H-best
         $size = 3; // 1-50
         $margin = 4;
