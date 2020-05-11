@@ -27,14 +27,25 @@ class Trans extends WxBaseStrategy {
 
     public function execute() {
         if ($this->validAndRefactorData()) {
+            $isUsePubConf = $this->data['use_pub'] ?? 0;
             $this->data = Func::arrayFilterKey($this->data, 'partner_trade_no,openid,check_name,re_user_name,amount,desc');
-            $this->data['mch_appid'] = $this->config['app_id'];
-            $this->data['mchid'] = $this->config['mch_id'];
+            if ($isUsePubConf == 1) {
+                $this->isPubPay = true;
+                $this->data['mch_appid'] = $this->config['public_app_id'];
+                $this->data['mchid'] = $this->config['public_mch_id'];
+                $certs = [
+                    'cert' => $this->config['pub_ssl_cert_path'],
+                    'key'  => $this->config['pub_ssl_key_path'],
+                ];
+            } else {
+                $this->data['mch_appid'] = $this->config['app_id'];
+                $this->data['mchid'] = $this->config['mch_id'];
+                $certs = [
+                    'cert' => $this->config['ssl_cert_path'],
+                    'key'  => $this->config['ssl_key_path'],
+                ];
+            }
             $this->data['spbill_create_ip'] = Func::getClientIp();
-            $certs = [
-                'cert' => $this->config['ssl_cert_path'],
-                'key'  => $this->config['ssl_key_path'],
-            ];
             return $this->clientRequestExecute($this->data, $certs);
         }
         return false;

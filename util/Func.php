@@ -203,7 +203,7 @@ class Func {
 
     public static function getClientIp() {
         $ip = '127.0.0.1';
-        if ($_SERVER['REMOTE_ADDR']) {
+        if ($_SERVER['REMOTE_ADDR'] ?? '') {
             $ip = $_SERVER['REMOTE_ADDR'];
         } elseif (getenv('REMOTE_ADDR')) {
             $ip = getenv('REMOTE_ADDR');

@@ -13,14 +13,16 @@ use pay\ali\AliBaseStrategy;
 use pay\util\Func;
 use pay\util\Err;
 
-class Trans extends AliBaseStrategy {
+class Trans extends AliBaseStrategy
+{
     protected $execFunc = 'execute';
 
     /**
      * 校验和重构数据
      * @return bool
      */
-    public function validAndRefactorData() {
+    public function validAndRefactorData()
+    {
         if (Func::validParams($this->data, ['payee_account', 'total_fee', 'real_name'])) {
             $this->data['out_biz_no'] = $this->data['out_trade_no'];
             $this->data['amount'] = $this->data['total_fee'] / 100;
@@ -30,14 +32,14 @@ class Trans extends AliBaseStrategy {
         return false;
     }
 
-    public function execute() {
+    public function execute()
+    {
         if ($this->validAndRefactorData()) {
             $this->data = Func::arrayFilterKey($this->data, 'out_biz_no,amount,payee_account,payer_show_name,payee_real_name,remark');
             //获取交易请求实例
             $this->data['payee_type'] = 'ALIPAY_LOGONID';
             $request = new \AlipayFundTransToaccountTransferRequest();
             $request->setBizContent(json_encode($this->data, JSON_UNESCAPED_UNICODE));
-            Func::log($request, $this->logFile);
             return $this->aopClientRequestExecute($request, $this->execFunc); //发起支付请求
         }
         return false;
@@ -48,7 +50,8 @@ class Trans extends AliBaseStrategy {
      * @param $result
      * @return array|bool
      */
-    public function aopClientRequestExecuteCallback($result) {
+    public function aopClientRequestExecuteCallback($result)
+    {
         if (!empty($result)) {
             $result = Func::objectToArray($result);
             $result = $result['alipay_fund_trans_toaccount_transfer_response'];

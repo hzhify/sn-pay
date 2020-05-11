@@ -33,4 +33,11 @@ return [
     //----
     'bd.pay.mini_app', // 百度小程序支付
     'bd.notify.notify', // 支付宝回调
+
+    
+    // 你好 现在
+    'now.pay.wap', //支付宝手机网页支付
+    'now.pay.app', //支付宝APP支付
+    'now.pay.qr', //支付宝扫码支付
+    'now.notify.notify', // 支付宝回调
 ];
